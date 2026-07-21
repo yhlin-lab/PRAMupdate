@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<!-- saved from url=(0044)file:///Users/ariel.lin/Documents/index.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>PRAM — Live Bidding Engine</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -168,8 +168,6 @@ select.s-in{cursor:pointer}
 
 .pw-change{background:var(--cream2);border:1px solid var(--border);border-radius:6px;padding:14px 16px;margin-top:12px}
 .pw-change-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:10px}
-
-/* ── PAGE PASSWORD GATE ──────────────────── */
 .gate-overlay{position:fixed;inset:0;background:#161616;z-index:999;display:flex;align-items:center;justify-content:center}
 .gate-box{background:#1e1e1e;border:1px solid #C79A3E;border-radius:12px;padding:40px 44px;width:360px;text-align:center}
 .gate-logo{color:#E8A020;font-size:22px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
@@ -197,7 +195,225 @@ select.s-in{cursor:pointer}
 
 <!-- RADIATOR VIEW -->
 <div id="radiator-view">
-  <div class="radiator" id="rad-content"></div>
+  <div class="radiator" id="rad-content">
+    <div class="rad-header">
+      <div>
+        <div class="rad-title">Live Bidding Engine Project — Information Radiator</div>
+        <div class="rad-date">21 July 2026</div>
+      </div>
+      <div class="rad-header-right">
+        <div class="prog-badge"><span style="width:7px;height:7px;border-radius:50%;background:#4ade80;display:inline-block"></span> On track</div>
+      </div>
+    </div>
+    <div class="summary-band">
+      <div class="summary-label">Summary<br>update</div>
+      <div class="summary-items"><div class="summary-item"><span class="sum-bullet">▸</span><span>1 of 7 components (Foundational Work) is complete.</span></div><div class="summary-item"><span class="sum-bullet">▸</span><span>Clerk console is being wrap up. It is the most important component &amp; will be ready for first gateway testing by mid/end August</span></div></div>
+    </div>
+    <div class="table-wrap">
+      <div class="col-headers">
+        <div class="col-h">Component</div>
+        <div class="col-h">Phase</div>
+        <div class="col-h">Progress (inc. design &amp; discovery)</div>
+        <div class="col-h">Status</div>
+        <div class="col-h">Effort</div>
+      </div>
+      <div class="comp-row alt">
+      <div class="comp-name-wrap"><div class="comp-name">Foundational Work</div></div>
+      <div class="phases"><span class="ph ph-done">Discovery</span><span class="ph ph-done">Design</span><span class="ph ph-done">Build</span><span class="ph ph-na">Test</span><span class="ph ph-na">Rollout</span></div>
+      <div class="prog-wrap">
+        <div class="prog-track"><div class="prog-fill" style="width:100%"></div></div>
+        <div class="prog-pct">100%</div>
+      </div>
+      <div class="rag-wrap"><div class="rag-dot" style="background:#ccc;border:1px solid #bbb"></div></div>
+      <div class="effort-text">April 2026 – June 2026</div>
+    </div><div class="comp-row">
+      <div class="comp-name-wrap"><div class="comp-name">Clerk Console</div></div>
+      <div class="phases"><span class="ph ph-done">Discovery</span><span class="ph ph-done">Design</span><span class="ph ph-active">Build</span><span class="ph ph-upcoming">Test</span><span class="ph ph-upcoming">Rollout</span></div>
+      <div class="prog-wrap">
+        <div class="prog-track"><div class="prog-fill" style="width:75%"></div></div>
+        <div class="prog-pct">75%</div>
+      </div>
+      <div class="rag-wrap"><div class="rag-dot" style="background:#16a34a"></div></div>
+      <div class="effort-text">15 August</div>
+    </div>
+      <div class="milestone-band">
+        <div class="milestone-line">
+          <div class="mile-dash"></div>
+          <div class="mile-chip">Testing Gateway 1: Clerk Test</div>
+          <div class="mile-dash"></div>
+        </div>
+      </div><div class="comp-row alt">
+      <div class="comp-name-wrap"><div class="comp-name">Registration Engine: Live Auctions</div></div>
+      <div class="phases"><span class="ph ph-done">Discovery</span><span class="ph ph-active">Design</span><span class="ph ph-upcoming">Build</span><span class="ph ph-upcoming">Test</span><span class="ph ph-upcoming">Rollout</span></div>
+      <div class="prog-wrap">
+        <div class="prog-track"><div class="prog-fill" style="width:23%"></div></div>
+        <div class="prog-pct">23%</div>
+      </div>
+      <div class="rag-wrap"><div class="rag-dot" style="background:#16a34a"></div></div>
+      <div class="effort-text">15 October 2026 (Estimated)</div>
+    </div>
+      <div class="milestone-band">
+        <div class="milestone-line">
+          <div class="mile-dash"></div>
+          <div class="mile-chip">Testing Gateway 2: Absentee bids &amp; Clerk Test</div>
+          <div class="mile-dash"></div>
+        </div>
+      </div><div class="comp-row">
+      <div class="comp-name-wrap"><div class="comp-name">Auctioneer Console</div></div>
+      <div class="phases"><span class="ph ph-done">Discovery</span><span class="ph ph-active">Design</span><span class="ph ph-active">Build</span><span class="ph ph-upcoming">Test</span><span class="ph ph-upcoming">Rollout</span></div>
+      <div class="prog-wrap">
+        <div class="prog-track"><div class="prog-fill" style="width:23%"></div></div>
+        <div class="prog-pct">23%</div>
+      </div>
+      <div class="rag-wrap"><div class="rag-dot" style="background:#16a34a"></div></div>
+      <div class="effort-text">10 October 2026 [Dependent on Clerk] - 24.5 points/20% share of 36 points</div>
+    </div>
+      <div class="milestone-band">
+        <div class="milestone-line">
+          <div class="mile-dash"></div>
+          <div class="mile-chip">Testing Gateway 3: Clerk &amp; Auctioneer Test</div>
+          <div class="mile-dash"></div>
+        </div>
+      </div><div class="comp-row alt">
+      <div class="comp-name-wrap"><div class="comp-name">Auction Room Display</div></div>
+      <div class="phases"><span class="ph ph-done">Discovery</span><span class="ph ph-done">Design</span><span class="ph ph-upcoming">Build</span><span class="ph ph-upcoming">Test</span><span class="ph ph-upcoming">Rollout</span></div>
+      <div class="prog-wrap">
+        <div class="prog-track"><div class="prog-fill" style="width:25%"></div></div>
+        <div class="prog-pct">25%</div>
+      </div>
+      <div class="rag-wrap"><div class="rag-dot" style="background:#16a34a"></div></div>
+      <div class="effort-text">13 September 2026 [Dependent on Clerk]  - 12 points/20% share of 36 points</div>
+    </div>
+      <div class="milestone-band">
+        <div class="milestone-line">
+          <div class="mile-dash"></div>
+          <div class="mile-chip">Testing Gateway 4: Mock Auction UK</div>
+          <div class="mile-dash"></div>
+        </div>
+      </div><div class="comp-row">
+      <div class="comp-name-wrap"><div class="comp-name">Live Bidding Page</div></div>
+      <div class="phases"><span class="ph ph-done">Discovery</span><span class="ph ph-done">Design</span><span class="ph ph-active">Build</span><span class="ph ph-upcoming">Test</span><span class="ph ph-upcoming">Rollout</span></div>
+      <div class="prog-wrap">
+        <div class="prog-track"><div class="prog-fill" style="width:9%"></div></div>
+        <div class="prog-pct">9%</div>
+      </div>
+      <div class="rag-wrap"><div class="rag-dot" style="background:#16a34a"></div></div>
+      <div class="effort-text">12 January 2027 &amp; 28 November 2027</div>
+    </div><div class="comp-row sub">
+        <div class="comp-name-wrap"><div class="comp-sub-label">WEB</div></div>
+        <div class="phases"><span class="ph ph-done">Discovery</span><span class="ph ph-done">Design</span><span class="ph ph-active">Build</span><span class="ph ph-upcoming">Test</span><span class="ph ph-upcoming">Rollout</span></div>
+        <div class="prog-wrap">
+          <div class="prog-track"><div class="prog-fill" style="width:13%"></div></div>
+          <div class="prog-pct">13%</div>
+        </div>
+        <div class="rag-wrap"><div class="rag-dot" style="background:#16a34a"></div></div>
+        <div class="effort-text"></div>
+      </div><div class="comp-row sub">
+        <div class="comp-name-wrap"><div class="comp-sub-label">APP</div></div>
+        <div class="phases"><span class="ph ph-done">Discovery</span><span class="ph ph-done">Design</span><span class="ph ph-upcoming">Build</span><span class="ph ph-upcoming">Test</span><span class="ph ph-upcoming">Rollout</span></div>
+        <div class="prog-wrap">
+          <div class="prog-track"><div class="prog-fill" style="width:0%"></div></div>
+          <div class="prog-pct">0%</div>
+        </div>
+        <div class="rag-wrap"><div class="rag-dot" style="background:#16a34a"></div></div>
+        <div class="effort-text"></div>
+      </div><div class="comp-row alt">
+      <div class="comp-name-wrap"><div class="comp-name">Auction &amp; Lot Details</div></div>
+      <div class="phases"><span class="ph ph-done">Discovery</span><span class="ph ph-done">Design</span><span class="ph ph-upcoming">Build</span><span class="ph ph-upcoming">Test</span><span class="ph ph-upcoming">Rollout</span></div>
+      <div class="prog-wrap">
+        <div class="prog-track"><div class="prog-fill" style="width:10%"></div></div>
+        <div class="prog-pct">10%</div>
+      </div>
+      <div class="rag-wrap"><div class="rag-dot" style="background:#16a34a"></div></div>
+      <div class="effort-text">25 January 2027</div>
+    </div><div class="comp-row sub">
+        <div class="comp-name-wrap"><div class="comp-sub-label">WEB</div></div>
+        <div class="phases"><span class="ph ph-done">Discovery</span><span class="ph ph-done">Design</span><span class="ph ph-active">Build</span><span class="ph ph-upcoming">Test</span><span class="ph ph-upcoming">Rollout</span></div>
+        <div class="prog-wrap">
+          <div class="prog-track"><div class="prog-fill" style="width:12.5%"></div></div>
+          <div class="prog-pct">12.5%</div>
+        </div>
+        <div class="rag-wrap"><div class="rag-dot" style="background:#16a34a"></div></div>
+        <div class="effort-text"></div>
+      </div><div class="comp-row sub">
+        <div class="comp-name-wrap"><div class="comp-sub-label">APP</div></div>
+        <div class="phases"><span class="ph ph-done">Discovery</span><span class="ph ph-done">Design</span><span class="ph ph-active">Build</span><span class="ph ph-upcoming">Test</span><span class="ph ph-upcoming">Rollout</span></div>
+        <div class="prog-wrap">
+          <div class="prog-track"><div class="prog-fill" style="width:12.5%"></div></div>
+          <div class="prog-pct">12.5%</div>
+        </div>
+        <div class="rag-wrap"><div class="rag-dot" style="background:#16a34a"></div></div>
+        <div class="effort-text"></div>
+      </div>
+      <div class="milestone-band">
+        <div class="milestone-line">
+          <div class="mile-dash"></div>
+          <div class="mile-chip">Mock Auction (Global)</div>
+          <div class="mile-dash"></div>
+        </div>
+      </div>
+      <div class="milestone-band">
+        <div class="milestone-line">
+          <div class="mile-dash"></div>
+          <div class="mile-chip">Pilot Auctions (Global) &amp; Hypercare</div>
+          <div class="mile-dash"></div>
+        </div>
+      </div>
+      <div class="milestone-band">
+        <div class="milestone-line">
+          <div class="mile-dash"></div>
+          <div class="mile-chip">New milestone</div>
+          <div class="mile-dash"></div>
+        </div>
+      </div>
+      <div class="legend-row">
+        <div class="leg"><div class="leg-dot" style="background:#16a34a"></div> On track</div>
+        <div class="leg"><div class="leg-dot" style="background:#d97706"></div> At risk</div>
+        <div class="leg"><div class="leg-dot" style="background:#dc2626"></div> Blocked</div>
+        <div class="leg"><div class="leg-dot" style="background:#ccc;border:1px solid #bbb"></div> Complete / N/A</div>
+        <div style="margin-left:20px;display:flex;gap:10px;align-items:center">
+          <div class="leg"><div class="leg-box" style="background:#161616"></div> Done</div>
+          <div class="leg"><div class="leg-box" style="background:#2563eb"></div> In progress</div>
+          <div class="leg"><div class="leg-box" style="background:#e8e6e0;border:1px solid #d8d5cc"></div> Upcoming</div>
+          <div class="leg"><div class="leg-box" style="border:1px solid #e0ddd5"></div> N/A</div>
+        </div>
+        
+      </div>
+    </div>
+    <div class="conductor-section">
+      <div class="conductor-header">
+        <div class="conductor-title">How the components work together</div>
+        <div class="conductor-sub">Clerk Console drives all bid actions — everything else receives or feeds into it</div>
+      </div>
+      <div class="conductor-body">
+        <div style="display:flex;align-items:stretch;gap:0;position:relative;min-height:300px">
+
+          <div style="flex:1;display:flex;flex-direction:column;justify-content:space-around;padding:12px 0;gap:14px;z-index:2">
+            <div style="font-size:11px;font-style:italic;color:#999;margin-bottom:-6px">Feeds bids and actions in</div>
+            <div class="cond-card cond-card-blue" id="cl0"><div class="cond-card-title">Registration Engine</div><div class="cond-card-sub">Staff add pre-sale bids and actions</div></div>
+            <div class="cond-card cond-card-blue" id="cl1"><div class="cond-card-title">Auction and Lot Details</div><div class="cond-card-sub">Clients place pre-sale bids</div></div>
+            <div class="cond-card cond-card-blue" id="cl2"><div class="cond-card-title">Live Bidding Page</div><div class="cond-card-sub">Real-time bids from online and mobile</div></div>
+          </div>
+
+          <div style="width:280px;flex-shrink:0;display:flex;align-items:center;justify-content:center;position:relative;z-index:2">
+            <div class="cond-hub" id="hub">
+              <div class="cond-hub-title">Clerk Console</div>
+              <div class="cond-hub-role">the conductor</div>
+              <div class="cond-hub-sub">Accepts bids,<br>advances lots</div>
+            </div>
+          </div>
+
+          <div style="flex:1;display:flex;flex-direction:column;justify-content:space-around;padding:12px 0;gap:14px;z-index:2">
+            <div style="font-size:11px;font-style:italic;color:#999;margin-bottom:-6px">Information Display Units</div>
+            <div class="cond-card cond-card-teal" id="cr0"><div class="cond-card-title">Auctioneer Console</div><div class="cond-card-sub">Live view for the auctioneer</div></div>
+            <div style="flex:1"></div>
+            <div class="cond-card cond-card-teal" id="cr1"><div class="cond-card-title">Auction Room Display</div><div class="cond-card-sub">Big screen in the saleroom</div></div>
+          </div>
+
+          <svg id="cond-svg" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;overflow:visible"><defs><marker id="arri" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#C79A3E" stroke-width="2" stroke-linecap="round"></path></marker><marker id="arro" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#C79A3E" stroke-width="2" stroke-linecap="round"></path></marker></defs><line x1="479" y1="82.8125" x2="554" y2="150" stroke="#C79A3E" stroke-width="2" stroke-dasharray="6 7" marker-end="url(#arri)" style="animation: 1s linear 0s infinite normal none running dashin;"></line><line x1="479" y1="167.6875" x2="554" y2="150" stroke="#C79A3E" stroke-width="2" stroke-dasharray="6 7" marker-end="url(#arri)" style="animation: 1s linear 0s infinite normal none running dashin;"></line><line x1="479" y1="252.5625" x2="554" y2="150" stroke="#C79A3E" stroke-width="2" stroke-dasharray="6 7" marker-end="url(#arri)" style="animation: 1s linear 0s infinite normal none running dashin;"></line><line x1="684" y1="150" x2="759" y2="61.25" stroke="#C79A3E" stroke-width="2" stroke-dasharray="6 7" marker-end="url(#arro)" style="animation: 1s linear 0s infinite normal none running dashout;"></line><line x1="684" y1="150" x2="759" y2="259.75" stroke="#C79A3E" stroke-width="2" stroke-dasharray="6 7" marker-end="url(#arro)" style="animation: 1s linear 0s infinite normal none running dashout;"></line></svg>
+        </div>
+      </div>
+    </div></div>
   <button class="lock-btn" onclick="openLock()" title="Settings">🔒</button>
 </div>
 
@@ -206,8 +422,7 @@ select.s-in{cursor:pointer}
   <div class="modal">
     <div class="modal-title">Settings access</div>
     <div class="modal-sub">Enter the settings password to continue.</div>
-    <input type="password" id="pw-input" placeholder="Password"
-      onkeydown="if(event.key==='Enter')checkPassword()"/>
+    <input type="password" id="pw-input" placeholder="Password" onkeydown="if(event.key===&#39;Enter&#39;)checkPassword()">
     <div class="modal-error" id="pw-error"></div>
     <div class="modal-btns">
       <button class="btn btn-ghost" onclick="closeLock()">Cancel</button>
@@ -728,7 +943,7 @@ function logoFile(f){
 }
 
 async function init(){
-  renderRadiator(); // show immediately — never blank
+  renderRadiator();
   const before = JSON.stringify(D);
   await load();
   if(JSON.stringify(D) !== before) renderRadiator();
@@ -790,7 +1005,6 @@ function drawArrows(){
 
 window.addEventListener('resize',()=>setTimeout(drawArrows,50));
 
-// ── PAGE PASSWORD GATE ────────────────────
 const PAGE_PW = 'product2026';
 const PAGE_PW_KEY = 'pram_page_unlocked';
 
@@ -814,5 +1028,6 @@ if(localStorage.getItem(PAGE_PW_KEY) !== '1'){
   document.getElementById('gate-overlay').style.display='none';
 }
 </script>
-</body>
-</html>
+
+
+</body></html>
