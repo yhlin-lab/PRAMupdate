@@ -168,9 +168,32 @@ select.s-in{cursor:pointer}
 
 .pw-change{background:var(--cream2);border:1px solid var(--border);border-radius:6px;padding:14px 16px;margin-top:12px}
 .pw-change-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:10px}
+
+/* ── PAGE PASSWORD GATE ──────────────────── */
+.gate-overlay{position:fixed;inset:0;background:#161616;z-index:999;display:flex;align-items:center;justify-content:center}
+.gate-box{background:#1e1e1e;border:1px solid #C79A3E;border-radius:12px;padding:40px 44px;width:360px;text-align:center}
+.gate-logo{color:#E8A020;font-size:22px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+.gate-sub{color:#888;font-size:13px;margin-bottom:28px}
+.gate-input{width:100%;background:#111;border:1px solid #333;border-radius:6px;padding:10px 14px;color:#fff;font-size:14px;font-family:inherit;text-align:center;letter-spacing:.1em;margin-bottom:10px}
+.gate-input:focus{outline:none;border-color:#C79A3E}
+.gate-btn{width:100%;background:#E8A020;color:#161616;border:none;border-radius:6px;padding:10px;font-size:14px;font-weight:700;cursor:pointer}
+.gate-btn:hover{background:#C79A3E}
+.gate-error{color:#ef4444;font-size:12px;min-height:18px;margin-top:6px}
 </style>
 </head>
 <body>
+
+<!-- PAGE PASSWORD GATE -->
+<div class="gate-overlay" id="gate-overlay">
+  <div class="gate-box">
+    <div class="gate-logo">PRAM</div>
+    <div class="gate-sub">Live Bidding Engine · Programme Update</div>
+    <input class="gate-input" type="password" id="gate-input" placeholder="Enter password"
+      onkeydown="if(event.key==='Enter')checkGate()"/>
+    <button class="gate-btn" onclick="checkGate()">View update</button>
+    <div class="gate-error" id="gate-error"></div>
+  </div>
+</div>
 
 <!-- RADIATOR VIEW -->
 <div id="radiator-view">
@@ -209,6 +232,13 @@ select.s-in{cursor:pointer}
 const SK = 'pram_rad_v2';
 const PK = 'pram_rad_pw';
 const DEFAULT_PW = 'pram2026';
+
+const GIST_ID = 'b75c659d38518125dd0d777ed8a482d7';
+const GIST_FILE = 'pram-data.json';
+const GIST_API = `https://api.github.com/gists/${GIST_ID}`;
+const GIST_RAW = `https://gist.githubusercontent.com/yunhui1990/${GIST_ID}/raw/${GIST_FILE}`;
+function getToken(){ try{ return localStorage.getItem('pram_gist_token')||''; }catch(e){ return ''; } }
+function setToken(t){ try{ localStorage.setItem('pram_gist_token',t); }catch(e){} }
 
 const PHASES = ['Discovery','Design','Build','Test','Rollout'];
 const RAG = {green:'#16a34a',amber:'#d97706',red:'#dc2626',none:null};
@@ -250,16 +280,44 @@ const DEFAULTS = {
 let D = JSON.parse(JSON.stringify(DEFAULTS));
 let unlocked = false;
 
-function load(){
+async function load(){
+  try{
+    const r = await fetch(GIST_RAW + '?t=' + Date.now());
+    if(r.ok){
+      const text = await r.text();
+      if(text && text.trim() !== '{}' && text.trim() !== ''){
+        D = JSON.parse(text);
+        localStorage.setItem(SK, text);
+        return;
+      }
+    }
+  }catch(e){}
   try{ const v=localStorage.getItem(SK); if(v) D=JSON.parse(v); }catch(e){}
 }
-function save(){
+async function save(){
+  const token = getToken();
+  if(!token){ alert('No GitHub token set.\n\nGo to Settings → GitHub Token and paste your Personal Access Token.'); return; }
+  const json = JSON.stringify(D, null, 2);
+  const saveEl = document.getElementById('save-ok');
+  if(saveEl) saveEl.textContent = '⏳ Saving…';
   try{
-    localStorage.setItem(SK,JSON.stringify(D));
-    const el=document.getElementById('save-ok');
-    if(el){el.textContent='✓ Saved '+new Date().toLocaleTimeString();setTimeout(()=>{if(el)el.textContent=''},3000);}
+    const r = await fetch(GIST_API, {
+      method:'PATCH',
+      headers:{
+        'Authorization':`token ${token}`,
+        'Accept':'application/vnd.github.v3+json',
+        'Content-Type':'application/json'
+      },
+      body: JSON.stringify({files:{[GIST_FILE]:{content:json}}})
+    });
+    if(!r.ok) throw new Error(`GitHub returned ${r.status} — check your token has gist scope`);
+    localStorage.setItem(SK, json);
+    if(saveEl){saveEl.textContent='✓ Saved to Gist · '+new Date().toLocaleTimeString();setTimeout(()=>{if(saveEl)saveEl.textContent=''},4000);}
     renderRadiator();
-  }catch(e){alert('Save failed: '+e.message);}
+  }catch(e){
+    if(saveEl) saveEl.textContent='';
+    alert('Save failed: '+e.message);
+  }
 }
 
 function getPassword(){
@@ -606,6 +664,26 @@ function renderSettings(){
     </div>
 
     <div class="s-card">
+      <div class="s-card-title">🔗 GitHub token (for saving to Gist)</div>
+      <div class="pw-change">
+        <div class="pw-change-title">Personal Access Token — gist scope only</div>
+        <div class="s-row">
+          <div class="s-field" style="flex:1">
+            <div class="s-lbl">Token</div>
+            <input class="s-in" style="width:100%;font-family:monospace" type="password"
+              id="gist-token-input" placeholder="ghp_…" value="${getToken()}"/>
+          </div>
+          <button class="btn btn-gold btn-sm" style="align-self:flex-end"
+            onclick="setToken(document.getElementById('gist-token-input').value);document.getElementById('token-msg').textContent='✓ Token saved';document.getElementById('token-msg').style.color='#16a34a';setTimeout(()=>document.getElementById('token-msg').textContent='',3000)">
+            Save token
+          </button>
+        </div>
+        <div id="token-msg" style="font-size:12px;margin-top:4px"></div>
+        <div style="font-size:11px;color:var(--muted);margin-top:6px">Stored only in your browser — never written to the HTML file. Anyone can read the page; only you can save changes.</div>
+      </div>
+    </div>
+
+    <div class="s-card">
       <div class="s-card-title">🔑 Change password</div>
       <div class="pw-change">
         <div class="pw-change-title">Settings password</div>
@@ -649,9 +727,11 @@ function logoFile(f){
   r.readAsDataURL(f);
 }
 
-function init(){
-  load();
-  renderRadiator();
+async function init(){
+  renderRadiator(); // show immediately — never blank
+  const before = JSON.stringify(D);
+  await load();
+  if(JSON.stringify(D) !== before) renderRadiator();
 }
 
 function drawArrows(){
@@ -709,7 +789,30 @@ function drawArrows(){
 }
 
 window.addEventListener('resize',()=>setTimeout(drawArrows,50));
+
+// ── PAGE PASSWORD GATE ────────────────────
+const PAGE_PW = 'product2026';
+const PAGE_PW_KEY = 'pram_page_unlocked';
+
+function checkGate(){
+  const v = document.getElementById('gate-input').value;
+  if(v === PAGE_PW){
+    localStorage.setItem(PAGE_PW_KEY,'1');
+    document.getElementById('gate-overlay').style.display='none';
+  } else {
+    document.getElementById('gate-error').textContent='Incorrect password. Please try again.';
+    document.getElementById('gate-input').select();
+  }
+}
+
 init();
+
+if(localStorage.getItem(PAGE_PW_KEY) !== '1'){
+  document.getElementById('gate-overlay').style.display='flex';
+  setTimeout(()=>document.getElementById('gate-input').focus(),100);
+} else {
+  document.getElementById('gate-overlay').style.display='none';
+}
 </script>
 </body>
 </html>
