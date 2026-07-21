@@ -3,7 +3,7 @@ name: Update PRAM Radiator from Jira
 on:
   schedule:
     - cron: '0 7 * * 1'  # Every Monday at 7:00 AM UTC
-  workflow_dispatch:      # Also allows manual trigger from GitHub Actions tab
+  workflow_dispatch:      # Manual trigger from GitHub Actions tab
 
 jobs:
   update-radiator:
@@ -38,57 +38,88 @@ jobs:
               "Accept": "application/json"
           }
 
-          # Epic IDs per component (can list multiple, progress is averaged)
+          # Epic IDs per component
           EPICS = {
-              "c1": ["NDC-8214"],        # Clerk Console
-              "c2": ["NDC-8218"],        # Registration Engine: Live Auctions
-              "c3": ["NDC-8213"],        # Auctioneer Console
-              "c4": ["NDC-8216"],        # Auction Room Display
-              "c5": ["NDC-8215", "NDC-8548"],  # Live Bidding Page (Web + App)
-              "c6": ["NDC-8219"],        # Auction & Lot Details
+              "c1": ["NDC-8214"],
+              "c2": ["NDC-8218"],
+              "c3": ["NDC-8213"],
+              "c4": ["NDC-8216"],
+              "c5": ["NDC-8215", "NDC-8548"],  # averaged
+              "c6": ["NDC-8219"],
           }
 
-          def get_epic_progress(epic_key):
-              """Fetch all child issues of an epic and calculate % story points done."""
-              jql = f'issueFunction in issuesinEpics("key = {epic_key}") AND issuetype != Epic'
-              url = (f"{JIRA_BASE}/rest/api/3/search"
-                     f"?jql={urllib.request.quote(jql)}"
-                     f"&fields=status,story_points,customfield_10016"
-                     f"&maxResults=200")
-              try:
-                  req = urllib.request.Request(url, headers=jira_headers)
-                  with urllib.request.urlopen(req) as r:
-                      data = json.loads(r.read())
-                  issues = data.get("issues", [])
-                  total_sp = 0
-                  done_sp = 0
-                  for issue in issues:
-                      fields = issue.get("fields", {})
-                      # story points: customfield_10016 or customfield_10028
-                      sp = fields.get("customfield_10016") or fields.get("customfield_10028") or 0
-                      if sp:
-                          sp = float(sp)
-                          total_sp += sp
-                          status_cat = fields.get("status", {}).get("statusCategory", {}).get("key", "")
-                          if status_cat == "done":
-                              done_sp += sp
-                  if total_sp == 0:
-                      return None  # No story points set — don't override
-                  return round((done_sp / total_sp) * 100)
-              except Exception as e:
-                  print(f"  Warning: could not fetch {epic_key}: {e}")
-                  return None
+          def jira_get(url):
+              req = urllib.request.Request(url, headers=jira_headers)
+              with urllib.request.urlopen(req) as r:
+                  return json.loads(r.read())
 
-          def get_component_progress(epic_keys):
-              """Average progress across multiple epics."""
-              results = [get_epic_progress(k) for k in epic_keys]
+          def find_story_points_field():
+              """Find which custom field ID Bonhams uses for story points."""
+              url = f"{JIRA_BASE}/rest/api/3/field"
+              fields = jira_get(url)
+              for f in fields:
+                  name = f.get("name","").lower()
+                  if "story point" in name or "story_point" in name:
+                      print(f"  Found story points field: {f['id']} ({f['name']})")
+                      return f["id"]
+              print("  Warning: story points field not found, defaulting to customfield_10016")
+              return "customfield_10016"
+
+          def get_epic_progress(epic_key, sp_field):
+              """Fetch child issues of an epic and calculate % story points done."""
+              # Try both Jira Cloud approaches for finding child issues
+              for jql in [
+                  f'"Epic Link" = {epic_key} AND issuetype != Epic',
+                  f'parentEpic = {epic_key} AND issuetype != Epic',
+                  f'issueLinks in linkedIssues("{epic_key}","is child of") AND issuetype != Epic',
+              ]:
+                  try:
+                      url = (f"{JIRA_BASE}/rest/api/3/search"
+                             f"?jql={urllib.request.quote(jql)}"
+                             f"&fields=status,{sp_field}"
+                             f"&maxResults=200")
+                      data = jira_get(url)
+                      issues = data.get("issues", [])
+                      if not issues:
+                          continue
+                      print(f"    Found {len(issues)} issues via: {jql[:50]}...")
+                      total_sp = 0
+                      done_sp = 0
+                      for issue in issues:
+                          fields = issue.get("fields", {})
+                          sp = fields.get(sp_field) or 0
+                          if sp:
+                              sp = float(sp)
+                              total_sp += sp
+                              status_cat = (fields.get("status", {})
+                                            .get("statusCategory", {})
+                                            .get("key", ""))
+                              if status_cat == "done":
+                                  done_sp += sp
+                      print(f"    Story points: {done_sp} done / {total_sp} total")
+                      if total_sp == 0:
+                          print(f"    No story points set on tickets — skipping")
+                          return None
+                      return round((done_sp / total_sp) * 100)
+                  except Exception as e:
+                      print(f"    JQL failed ({jql[:40]}...): {e}")
+                      continue
+              print(f"    Could not find issues for {epic_key} — skipping")
+              return None
+
+          def get_component_progress(epic_keys, sp_field):
+              results = [get_epic_progress(k, sp_field) for k in epic_keys]
               valid = [r for r in results if r is not None]
               if not valid:
                   return None
               return round(sum(valid) / len(valid))
 
-          # Fetch current Gist data
-          print("Fetching current Gist data...")
+          # Step 1: find story points field
+          print("Step 1: Finding story points field in Jira...")
+          sp_field = find_story_points_field()
+
+          # Step 2: fetch current Gist
+          print("\nStep 2: Fetching current Gist data...")
           gist_url = f"https://api.github.com/gists/{GIST_ID}"
           gh_headers = {
               "Authorization": f"token {GITHUB_TOKEN}",
@@ -97,53 +128,50 @@ jobs:
           req = urllib.request.Request(gist_url, headers=gh_headers)
           with urllib.request.urlopen(req) as r:
               gist_data = json.loads(r.read())
-
           content = gist_data["files"][GIST_FILE]["content"]
           radiator = json.loads(content)
 
-          # Update each component's progress
-          print("Fetching Jira epic progress...")
+          # Step 3: update each component
+          print("\nStep 3: Fetching Jira progress...")
           updated = False
           for comp in radiator.get("components", []):
               comp_id = comp.get("id")
-              if comp_id in EPICS:
-                  epic_keys = EPICS[comp_id]
-                  print(f"  {comp['name']} ({', '.join(epic_keys)})...")
-                  pct = get_component_progress(epic_keys)
-                  if pct is not None:
-                      old = comp.get("progress", 0)
-                      comp["progress"] = pct
-                      print(f"    {old}% → {pct}%")
-                      updated = True
-                  else:
-                      print(f"    No story points found — keeping {comp.get('progress', 0)}%")
+              if comp_id not in EPICS:
+                  continue
+              epic_keys = EPICS[comp_id]
+              print(f"\n  {comp['name']} ({', '.join(epic_keys)}):")
+              pct = get_component_progress(epic_keys, sp_field)
+              if pct is not None:
+                  old = comp.get("progress", 0)
+                  comp["progress"] = pct
+                  print(f"  → {old}% → {pct}%")
+                  updated = True
+              else:
+                  print(f"  → No update (keeping {comp.get('progress',0)}%)")
 
-                  # Also update sub-rows proportionally if they exist
-                  sub_rows = comp.get("subRows", [])
-                  if sub_rows and pct is not None and len(EPICS[comp_id]) > 1:
-                      per_epic = []
-                      for key in EPICS[comp_id]:
-                          p = get_epic_progress(key)
-                          per_epic.append(p if p is not None else 0)
-                      for i, sub in enumerate(sub_rows):
-                          if i < len(per_epic):
-                              sub["progress"] = per_epic[i]
+              # Sub-rows: assign per-epic progress individually
+              sub_rows = comp.get("subRows", [])
+              if sub_rows and len(EPICS[comp_id]) > 1:
+                  for i, sub in enumerate(sub_rows):
+                      if i < len(EPICS[comp_id]):
+                          p = get_epic_progress(EPICS[comp_id][i], sp_field)
+                          if p is not None:
+                              sub["progress"] = p
 
+          # Step 4: save back to Gist
           if not updated:
-              print("No updates to apply.")
+              print("\nNo updates — Gist unchanged.")
           else:
-              # Write updated data back to Gist
-              print("Saving updated data to Gist...")
+              print("\nStep 4: Saving updated data to Gist...")
               new_content = json.dumps(radiator, indent=2)
-              payload = json.dumps({"files": {GIST_FILE: {"content": new_content}}}).encode()
+              payload = json.dumps({"files":{GIST_FILE:{"content":new_content}}}).encode()
               req = urllib.request.Request(
-                  gist_url,
-                  data=payload,
-                  headers={**gh_headers, "Content-Type": "application/json"},
+                  gist_url, data=payload,
+                  headers={**gh_headers,"Content-Type":"application/json"},
                   method="PATCH"
               )
               with urllib.request.urlopen(req) as r:
-                  print(f"  Gist updated. Status: {r.status}")
+                  print(f"  Done. Status: {r.status}")
 
-          print("Done.")
+          print("\nWorkflow complete.")
           PYEOF
