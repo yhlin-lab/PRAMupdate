@@ -168,32 +168,9 @@ select.s-in{cursor:pointer}
 
 .pw-change{background:var(--cream2);border:1px solid var(--border);border-radius:6px;padding:14px 16px;margin-top:12px}
 .pw-change-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:10px}
-
-/* ── PAGE PASSWORD GATE ──────────────────── */
-.gate-overlay{position:fixed;inset:0;background:#161616;z-index:999;display:flex;align-items:center;justify-content:center}
-.gate-box{background:#1e1e1e;border:1px solid #C79A3E;border-radius:12px;padding:40px 44px;width:360px;text-align:center}
-.gate-logo{color:#E8A020;font-size:22px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
-.gate-sub{color:#888;font-size:13px;margin-bottom:28px}
-.gate-input{width:100%;background:#111;border:1px solid #333;border-radius:6px;padding:10px 14px;color:#fff;font-size:14px;font-family:inherit;text-align:center;letter-spacing:.1em;margin-bottom:10px}
-.gate-input:focus{outline:none;border-color:#C79A3E}
-.gate-btn{width:100%;background:#E8A020;color:#161616;border:none;border-radius:6px;padding:10px;font-size:14px;font-weight:700;cursor:pointer;transition:background .15s}
-.gate-btn:hover{background:#C79A3E}
-.gate-error{color:#ef4444;font-size:12px;min-height:18px;margin-top:6px}
 </style>
 </head>
 <body>
-
-<!-- PAGE PASSWORD GATE -->
-<div class="gate-overlay" id="gate-overlay">
-  <div class="gate-box">
-    <div class="gate-logo">PRAM</div>
-    <div class="gate-sub">Live Bidding Engine · Programme Update</div>
-    <input class="gate-input" type="password" id="gate-input" placeholder="Enter password"
-      onkeydown="if(event.key==='Enter')checkGate()"/>
-    <button class="gate-btn" onclick="checkGate()">View update</button>
-    <div class="gate-error" id="gate-error"></div>
-  </div>
-</div>
 
 <!-- RADIATOR VIEW -->
 <div id="radiator-view">
@@ -469,7 +446,7 @@ function renderRadiator(){
         </div>
       </div>
     </div>`;
-  requestAnimationFrame(()=>requestAnimationFrame(drawArrows));
+  setTimeout(drawArrows, 80);
 }
 
 /* ── RENDER SETTINGS ─────────────────────── */
@@ -681,75 +658,58 @@ function drawArrows(){
   const svg = document.getElementById('cond-svg');
   if(!svg) return;
   const hub = document.getElementById('hub');
-  const lefts = ['cl0','cl1','cl2'].map(id=>document.getElementById(id));
-  const rights = ['cr0','cr1'].map(id=>document.getElementById(id));
-  if(!hub || lefts.some(e=>!e) || rights.some(e=>!e)) return;
+  const leftEls = ['cl0','cl1','cl2'].map(id=>document.getElementById(id));
+  const rightEls = ['cr0','cr1'].map(id=>document.getElementById(id));
+  if(!hub || leftEls.some(e=>!e) || rightEls.some(e=>!e)) return;
+
+  const NS = 'http://www.w3.org/2000/svg';
+  while(svg.firstChild) svg.removeChild(svg.firstChild);
+
+  const defs = document.createElementNS(NS,'defs');
+  ['arri','arro'].forEach(id=>{
+    const m = document.createElementNS(NS,'marker');
+    m.setAttribute('id',id);
+    m.setAttribute('viewBox','0 0 10 10');
+    m.setAttribute('refX','7'); m.setAttribute('refY','5');
+    m.setAttribute('markerWidth','5'); m.setAttribute('markerHeight','5');
+    m.setAttribute('orient','auto');
+    const p = document.createElementNS(NS,'path');
+    p.setAttribute('d','M2 1L8 5L2 9');
+    p.setAttribute('fill','none'); p.setAttribute('stroke','#C79A3E');
+    p.setAttribute('stroke-width','2'); p.setAttribute('stroke-linecap','round');
+    m.appendChild(p); defs.appendChild(m);
+  });
+  svg.appendChild(defs);
 
   const svgRect = svg.parentElement.getBoundingClientRect();
-  function rel(el){
+  function mid(el){
     const r = el.getBoundingClientRect();
     return {
-      left: r.left - svgRect.left,
-      right: r.right - svgRect.left,
-      top: r.top - svgRect.top,
-      bottom: r.bottom - svgRect.top,
-      midY: (r.top + r.bottom)/2 - svgRect.top,
-      midX: (r.left + r.right)/2 - svgRect.left
+      left:  r.left   - svgRect.left,
+      right: r.right  - svgRect.left,
+      midY:  (r.top + r.bottom)/2 - svgRect.top
     };
   }
 
-  const h = rel(hub);
-  svg.innerHTML = `<defs>
-    <marker id="arri" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto">
-      <path d="M2 1L8 5L2 9" fill="none" stroke="#C79A3E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    </marker>
-    <marker id="arro" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto">
-      <path d="M2 1L8 5L2 9" fill="none" stroke="#C79A3E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    </marker>
-  </defs>`;
-
-  lefts.forEach(el=>{
-    const c = rel(el);
-    svg.innerHTML += `<line x1="${c.right}" y1="${c.midY}" x2="${h.left}" y2="${h.midY}"
-      stroke="#C79A3E" stroke-width="2" stroke-dasharray="6 7" marker-end="url(#arri)"
-      style="animation:dashin 1s linear infinite"/>`;
-  });
-
-  rights.forEach(el=>{
-    const c = rel(el);
-    svg.innerHTML += `<line x1="${h.right}" y1="${h.midY}" x2="${c.left}" y2="${c.midY}"
-      stroke="#C79A3E" stroke-width="2" stroke-dasharray="6 7" marker-end="url(#arro)"
-      style="animation:dashout 1s linear infinite"/>`;
-  });
-}
-
-window.addEventListener('resize',()=>requestAnimationFrame(drawArrows));
-
-// ── PAGE PASSWORD GATE ────────────────────
-const PAGE_PW = 'product2026';
-const PAGE_PW_KEY = 'pram_page_unlocked';
-
-function checkGate(){
-  const v = document.getElementById('gate-input').value;
-  if(v === PAGE_PW){
-    localStorage.setItem(PAGE_PW_KEY, '1');
-    document.getElementById('gate-overlay').style.display = 'none';
-    document.getElementById('gate-input').value = '';
-  } else {
-    document.getElementById('gate-error').textContent = 'Incorrect password. Please try again.';
-    document.getElementById('gate-input').select();
+  function makeLine(x1,y1,x2,y2,markerId,animDir){
+    const l = document.createElementNS(NS,'line');
+    l.setAttribute('x1',x1); l.setAttribute('y1',y1);
+    l.setAttribute('x2',x2); l.setAttribute('y2',y2);
+    l.setAttribute('stroke','#C79A3E');
+    l.setAttribute('stroke-width','2');
+    l.setAttribute('stroke-dasharray','6 7');
+    l.setAttribute('marker-end',`url(#${markerId})`);
+    l.style.animation = `${animDir} 1s linear infinite`;
+    svg.appendChild(l);
   }
+
+  const h = mid(hub);
+  leftEls.forEach(el=>{ const c=mid(el); makeLine(c.right,c.midY,h.left,h.midY,'arri','dashin'); });
+  rightEls.forEach(el=>{ const c=mid(el); makeLine(h.right,h.midY,c.left,c.midY,'arro','dashout'); });
 }
 
+window.addEventListener('resize',()=>setTimeout(drawArrows,50));
 init();
-
-// Show gate on load unless already unlocked in this browser
-if(localStorage.getItem(PAGE_PW_KEY) !== '1'){
-  document.getElementById('gate-overlay').style.display = 'flex';
-  setTimeout(()=>document.getElementById('gate-input').focus(), 100);
-} else {
-  document.getElementById('gate-overlay').style.display = 'none';
-}
 </script>
 </body>
 </html>
