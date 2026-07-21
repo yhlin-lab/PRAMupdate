@@ -460,34 +460,33 @@ const RAG = {green:'#16a34a',amber:'#d97706',red:'#dc2626',none:null};
 
 const DEFAULTS = {
   title:'Live Bidding Engine Project — Information Radiator',
-  date:'2026-06-17',
+  date:'2026-07-21',
   summary:[
-    'All six components now in active build phase — programme on track',
-    'Clerk Console (critical path) at 51% — back-end majority complete, front-end foundations done',
-    'Testing Gateway 1 approaching as Clerk Console and Registration Engine near completion',
-    'Single combined release confirmed: BBE and AM components launch together'
+    '1 of 7 components (Foundational Work) is complete.',
+    'Clerk console is being wrapped up. It is the most important component & will be ready for first gateway testing by mid/end August'
   ],
   components:[
-    {id:'c0',name:'Foundational Work',subRows:[],phases:['done','done','done','na','na'],progress:100,rag:'none',effort:'Background work from April 2025 – June 2026'},
-    {id:'c1',name:'Clerk Console',subRows:[],phases:['done','done','active','upcoming','upcoming'],progress:51,rag:'green',effort:"4 of 6 months remaining (Oct '26)"},
-    {id:'c2',name:'Registration Engine: Live Auctions',subRows:[],phases:['done','done','upcoming','upcoming','upcoming'],progress:8,rag:'green',effort:'Sizing in progress'},
-    {id:'c3',name:'Auctioneer Console',subRows:[],phases:['done','done','active','upcoming','upcoming'],progress:14,rag:'green',effort:'Sizing in progress'},
-    {id:'c4',name:'Auction Room Display',subRows:[],phases:['done','done','upcoming','upcoming','upcoming'],progress:25,rag:'green',effort:'Sizing in progress'},
+    {id:'c0',name:'Foundational Work',subRows:[],phases:['done','done','done','na','na'],progress:100,rag:'none',effort:'April 2026 – June 2026'},
+    {id:'c1',name:'Clerk Console',subRows:[],phases:['done','done','active','upcoming','upcoming'],progress:75,rag:'green',effort:'15 August'},
+    {id:'c2',name:'Registration Engine: Live Auctions',subRows:[],phases:['done','active','upcoming','upcoming','upcoming'],progress:23,rag:'green',effort:'15 October 2026 (Estimated)'},
+    {id:'c3',name:'Auctioneer Console',subRows:[],phases:['done','active','active','upcoming','upcoming'],progress:23,rag:'green',effort:'10 October 2026 [Dependent on Clerk] - 24.5 points/20% share of 36 points'},
+    {id:'c4',name:'Auction Room Display',subRows:[],phases:['done','done','upcoming','upcoming','upcoming'],progress:25,rag:'green',effort:'13 September 2026 [Dependent on Clerk] - 12 points/20% share of 36 points'},
     {id:'c5',name:'Live Bidding Page',subRows:[
-      {id:'c5a',label:'WEB',phases:['done','done','active','upcoming','upcoming'],progress:7,rag:'green'},
-      {id:'c5b',label:'APP',phases:['done','active','upcoming','upcoming','upcoming'],progress:0,rag:'green'}
-    ],phases:['done','done','active','upcoming','upcoming'],progress:4,rag:'green',effort:'Sizing in progress'},
+      {id:'c5a',label:'WEB',phases:['done','done','active','upcoming','upcoming'],progress:13,rag:'green'},
+      {id:'c5b',label:'APP',phases:['done','done','upcoming','upcoming','upcoming'],progress:0,rag:'green'}
+    ],phases:['done','done','active','upcoming','upcoming'],progress:9,rag:'green',effort:'12 January 2027 & 28 November 2027'},
     {id:'c6',name:'Auction & Lot Details',subRows:[
-      {id:'c6a',label:'WEB',phases:['done','done','upcoming','upcoming','upcoming'],progress:5,rag:'green'},
-      {id:'c6b',label:'APP',phases:['done','done','upcoming','upcoming','upcoming'],progress:6,rag:'green'}
-    ],phases:['done','done','upcoming','upcoming','upcoming'],progress:6,rag:'green',effort:'Sizing in progress'}
+      {id:'c6a',label:'WEB',phases:['done','done','upcoming','upcoming','upcoming'],progress:12.5,rag:'green'},
+      {id:'c6b',label:'APP',phases:['done','done','upcoming','upcoming','upcoming'],progress:12.5,rag:'green'}
+    ],phases:['done','done','upcoming','upcoming','upcoming'],progress:10,rag:'green',effort:'25 January 2027'}
   ],
   milestones:[
-    {id:'m1',text:'Testing Gateway 1: Clerk Test',after:'c2'},
-    {id:'m2',text:'Testing Gateway 2: Clerk & Auctioneer Test',after:'c3'},
-    {id:'m3',text:'Mock Auction (London)',after:'c4'},
-    {id:'m4',text:'Mock Auction (Global)',after:'c6'},
-    {id:'m5',text:'Pilot Auctions (Global) & Hypercare',after:'END'}
+    {id:'m1',text:'Testing Gateway 1: Clerk Test',after:'c1'},
+    {id:'m2',text:'Testing Gateway 2: Absentee bids & Clerk Test',after:'c2'},
+    {id:'m3',text:'Testing Gateway 3: Clerk & Auctioneer Test',after:'c3'},
+    {id:'m4',text:'Testing Gateway 4: Mock Auction UK',after:'c4'},
+    {id:'m5',text:'Mock Auction (Global)',after:'c6'},
+    {id:'m6',text:'Pilot Auctions (Global) & Hypercare',after:'END'}
   ],
   logo:null
 };
