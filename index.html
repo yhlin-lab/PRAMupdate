@@ -451,7 +451,7 @@ const DEFAULT_PW = 'pram2026';
 const GIST_ID = 'b75c659d38518125dd0d777ed8a482d7';
 const GIST_FILE = 'pram-data.json';
 const GIST_API = `https://api.github.com/gists/${GIST_ID}`;
-const GIST_RAW = `https://gist.githubusercontent.com/yunhui1990/${GIST_ID}/raw/${GIST_FILE}`;
+const GIST_RAW = `https://gist.githubusercontent.com/yunhui1990-commits/${GIST_ID}/raw/${GIST_FILE}`;
 function getToken(){ try{ return localStorage.getItem('pram_gist_token')||''; }catch(e){ return ''; } }
 function setToken(t){ try{ localStorage.setItem('pram_gist_token',t); }catch(e){} }
 
